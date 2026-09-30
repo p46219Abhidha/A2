@@ -35,6 +35,7 @@ if st.button('Predict', type="primary"):
     region = region_map[region_input]
 
     # --- 2. FEATURE ENGINEERING (Must match Colab exactly) ---
+    smoker_bmi_interaction = smoker * bmi  # <--- ADDED THIS LINE
     smoker_age = smoker * age
     smoker_children = smoker * children
     bmi_age = bmi * age
@@ -60,6 +61,7 @@ if st.button('Predict', type="primary"):
         'children': [children],
         'smoker': [smoker],
         'region': [region],
+        'smoker_bmi_interaction': [smoker_bmi_interaction], # <--- ADDED THIS LINE
         'smoker_age': [smoker_age],
         'smoker_children': [smoker_children],
         'bmi_age': [bmi_age],
@@ -68,10 +70,6 @@ if st.button('Predict', type="primary"):
         'lifestyle_risk_score': [lifestyle_risk_score]
     }
     input_df = pd.DataFrame(input_data)
-    
-    # DEBUGGING LINE (Remove after it works)
-    st.write("Model expects:", model_columns)
-    st.write("App created:", input_df.columns.tolist())
 
     # Ensure column order matches training
     input_df = input_df[model_columns] 
