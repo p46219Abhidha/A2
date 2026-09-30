@@ -11,13 +11,11 @@ model_columns = joblib.load('model_columns.sav')
 st.title('Medical Cost & High-Risk Prediction Tool')
 st.write('Enter the patient details below to predict medical charges or high-cost risk.')
 
-# Sidebar for prediction type
 prediction_type = st.sidebar.radio(
     "What would you like to predict?",
     ("Medical Charges (Linear)", "High-Cost Risk (Logistic)")
 )
 
-# Input fields
 col1, col2 = st.columns(2)
 with col1:
     age = st.number_input("Age", min_value=18, max_value=100, value=35)
@@ -30,14 +28,13 @@ with col2:
     smoker_input = st.selectbox("Smoker", ['no', 'yes'])
 
 if st.button('Predict', type="primary"):
-    # --- 1. MANUAL PREPROCESSING (Must match Colab exactly) ---
+    # --- 1. MANUAL PREPROCESSING ---
     sex = 0 if sex_input == 'male' else 1
     smoker = 1 if smoker_input == 'yes' else 0
-    
     region_map = {'northeast': 0, 'northwest': 1, 'southeast': 2, 'southwest': 3}
     region = region_map[region_input]
 
-    # --- 2. FEATURE ENGINEERING (This is where the error was) ---
+    # --- 2. FEATURE ENGINEERING (Must match Colab exactly) ---
     smoker_age = smoker * age
     smoker_children = smoker * children
     bmi_age = bmi * age
@@ -72,6 +69,10 @@ if st.button('Predict', type="primary"):
     }
     input_df = pd.DataFrame(input_data)
     
+    # DEBUGGING LINE (Remove after it works)
+    st.write("Model expects:", model_columns)
+    st.write("App created:", input_df.columns.tolist())
+
     # Ensure column order matches training
     input_df = input_df[model_columns] 
 
